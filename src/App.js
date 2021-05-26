@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import StartLine from 'components/startLine/StartLine';
 import PilotList from 'components/pilots/PilotList';
+import AircraftList from 'components/aircraft/AircraftList';
 import 'styles/reset.scss';
 import 'styles/general.scss';
 
@@ -16,6 +17,9 @@ export default () => (
       <Switch>
         <Route path="/" exact>
           <StartLine />
+        </Route>
+        <Route path="/aircraft">
+          <AircraftList />
         </Route>
         <Route path="/pilots">
           <PilotList />
@@ -31,7 +35,7 @@ export default () => (
             <NavLink to="/aircraft">Aircraft</NavLink>
           </li>
           <li>
-            <NavLink to="/" exact>Starting Line</NavLink>
+            <NavLink to="/" exact>Starting</NavLink>
           </li>
         </ul>
       </nav>

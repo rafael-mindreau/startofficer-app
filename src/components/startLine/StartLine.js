@@ -1,16 +1,26 @@
 import React from 'react';
 import Aircraft from 'components/aircraft/Aircraft';
+import './StartLine.scss';
 
-const ZD = {
-  tailNumber: 'ZD',
-  tailNumberColor: '#d42e2e',
-};
+const CLUB_GLIDERS = [
+  {
+    tailNumber: '808',
+    tailNumberColor: '#12428a',
+  },
+  {
+    tailNumber: 'ZD',
+    tailNumberColor: '#d42e2e',
+  }
+];
 
-const TWIN = {
-  tailNumber: '808',
-  tailNumberColor: '#12428a',
-};
-
-export default () => (
-  <Aircraft aircraft={ZD} />
-);
+export default () => {
+  return (
+    <div className="startline-container">
+      {
+        CLUB_GLIDERS.map((glider) => (
+          <Aircraft aircraft={glider} />
+        ))
+      }
+    </div>
+  )
+}
