@@ -1,0 +1,8 @@
+.pilot-list-container {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+
+  overflow: auto;
+}

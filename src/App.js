@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  NavLink,
+} from 'react-router-dom';
+import StartLine from 'components/startLine/StartLine';
+import PilotList from 'components/pilots/PilotList';
+import 'styles/reset.scss';
+import 'styles/general.scss';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default () => (
+  <div>
+    <Router>
+      <Switch>
+        <Route path="/" exact>
+          <StartLine />
+        </Route>
+        <Route path="/pilots">
+          <PilotList />
+        </Route>
+      </Switch>
 
-export default App;
+      <nav className="tabs">
+        <ul>
+          <li>
+            <NavLink to="/pilots">Pilots</NavLink>
+          </li>
+          <li>
+            <NavLink to="/aircraft">Aircraft</NavLink>
+          </li>
+          <li>
+            <NavLink to="/" exact>Starting Line</NavLink>
+          </li>
+        </ul>
+      </nav>
+    </Router>
+  </div>
+);
