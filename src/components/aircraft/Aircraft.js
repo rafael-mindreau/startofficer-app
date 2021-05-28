@@ -7,7 +7,7 @@ export default ({
     tailNumberColor,
     selected,
   },
-  onClick,
+  onClick = () => {},
 }) => {
   const textStyle = {
     color: tailNumberColor,

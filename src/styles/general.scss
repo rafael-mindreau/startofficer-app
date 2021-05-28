@@ -8,6 +8,10 @@ body {
 
   background-color: black;
   color: white;
+
+  &.no-padding {
+    padding: 0;
+  }
 }
 
 nav.tabs {

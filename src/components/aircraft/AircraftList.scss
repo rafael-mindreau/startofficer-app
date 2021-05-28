@@ -1,8 +1,12 @@
 .aircraft-list-container {
   height: calc(100vh - 60px);
-  
+
   .aircraft-list {
     display: flex;
     flex-wrap: wrap;
+
+    .aircraft-container {
+      width: calc(33% - 30px);
+    }
   }
 }

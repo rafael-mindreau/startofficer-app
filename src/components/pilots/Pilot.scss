@@ -5,6 +5,16 @@
   padding: 10px 0;
   border-bottom: 1px solid rgba(#ffffff, 0.42);
 
+  &.assignable {
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    h2 {
+      line-height: 90px;
+    }
+  }
+
   h2 {
     font-size: 28px;
     font-weight: 900;
@@ -24,6 +34,10 @@
 
       background-color: #666666;
       border-radius: 5px;
+
+      &.no-margin {
+        margin: 0;
+      }
 
       &.vvo {
         background-color: #eea612;
@@ -47,6 +61,36 @@
     i {
       line-height: 28px;
       font-size: 18px;
+    }
+  }
+
+  .pilot-selection-menu {
+    position: absolute;
+    width: 70%;
+    right: 10px;
+    top: 10px;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    border-radius: 10px;
+
+    z-index: 999;
+
+    background-color: white;
+    color: black;
+
+    p {
+      padding: 20px;
+      border-bottom: 1px solid #c2c2c2;
+
+      &:last-child {
+        border: 0;
+      }
+
+      &.danger {
+        color: #e92f2f;
+      }
     }
   }
 }

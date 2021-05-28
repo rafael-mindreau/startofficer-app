@@ -1,4 +1,37 @@
 .startline-container {
-  display: flex;
   height: calc(100vh - 60px);
+  overflow: auto;
+
+  .starting-line-position {
+    display: flex;
+
+    border-bottom: 1px solid rgba(#ffffff, 0.3);
+  }
+
+  .pilot {
+    width: calc(100% - 150px);
+  }
+
+  .grass {
+    padding: 10px;
+    background-color: #31a836;
+    box-sizing: border-box;
+
+    .aircraft-container {
+      position: relative;
+      width: 80px;
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: -9px;
+        left: calc(50% - 10px);
+
+        border-bottom: 10px solid white;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+      }
+    }
+  }
 }
