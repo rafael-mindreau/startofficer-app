@@ -14,6 +14,7 @@ const TYPES = [
 
 export default () => {
   const [pilots, setPilots] = useLocalStorage('pilots', []);
+  const [assignedPilots, setAssignedPilots] = useLocalStorage('assigned-pilots', []);
 
   const addPilot = useCallback((name) => {
     // Add to list
@@ -27,10 +28,19 @@ export default () => {
   }, [pilots, setPilots]);
 
   const deletePilot = useCallback((id) => {
+    // Unassign if assigned to any "kist"
+    const updatedAssignedPilots = Object.fromEntries(Object.entries({...assignedPilots}).filter(([tailNumber, pilot]) => pilot.id !== id));
+    setAssignedPilots({
+      ...updatedAssignedPilots,
+    });
+    console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', updatedAssignedPilots);
+
+    // Set pilot inactive, but never really forget him/her
     const indexOfPilot = pilots.findIndex(pilotFromCollection => pilotFromCollection.id === id);
 
     setPilots([
       ...pilots.slice(0, indexOfPilot),
+
       ...pilots.slice(indexOfPilot + 1),
     ]);
   }, [pilots, setPilots]);
