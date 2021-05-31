@@ -49,13 +49,22 @@ export default () => {
     // We use this to set the order in the list for the starting line
     const amountOfSelectedAircraft = Object.entries(selectedAircraft).length;
 
-    const updatedSelectedAircraft = {
+    let updatedSelectedAircraft = {
       ...selectedAircraft,
     }
 
     if (updatedSelectedAircraft[tailNumber]) {
       // Delete from map if already exists
       delete updatedSelectedAircraft[tailNumber];
+
+      // Recalculate indices
+      updatedSelectedAircraft = Object.fromEntries(Object.entries(updatedSelectedAircraft).map(([tailNumber, glider], index) => ([
+        tailNumber,
+        {
+          ...glider,
+          order: index,
+        }
+      ])));
     } else {
       // Add to mapping when it doesn't exist yet
       updatedSelectedAircraft[tailNumber] = gliders.find(glider => glider.tailNumber === tailNumber);

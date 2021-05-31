@@ -1,5 +1,5 @@
 .startline-container {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px - 80px);
   overflow: auto;
 
   .list-container {
@@ -8,6 +8,10 @@
 
   .starting-line-position {
     display: flex;
+
+    &.flying {
+      opacity: 0.5;
+    }
   }
 
   .pilot {
@@ -39,6 +43,39 @@
         border-left: 10px solid transparent;
         border-right: 10px solid transparent;
       }
+    }
+  }
+}
+
+.startline-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  height: 80px;
+  width: 100%;
+  background-color: #464646;
+  box-sizing: border-box;
+
+  .left, .right {
+    display: flex;
+  }
+
+  button {
+    box-sizing: border-box;
+    margin-right: 10px;
+    width: 60px;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    &.launch-button {
+      background-color: #2abe72;
+    }
+
+    &.land-button {
+      background-color: #df3764;
+      color: white;
     }
   }
 }
