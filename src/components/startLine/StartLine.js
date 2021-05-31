@@ -16,6 +16,7 @@ const getDraggableStyle = (isDragging, providedStyle) => {
       )})`,
     };
   }
+  console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', result);
   return {
     userSelect: 'none',
     ...providedStyle,
@@ -79,12 +80,12 @@ export default () => {
                       <div
                         className="starting-line-position"
                         ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
                         style={getDraggableStyle(
                           snapshot.isDragging,
                           provided.draggableProps.style,
                         )}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
                       >
                         <div className="grass">
                           <Aircraft aircraft={glider} />
