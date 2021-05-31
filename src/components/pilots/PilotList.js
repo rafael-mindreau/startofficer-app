@@ -17,14 +17,31 @@ export default () => {
   const [assignedPilots, setAssignedPilots] = useLocalStorage('assigned-pilots', []);
 
   const addPilot = useCallback((name) => {
-    // Add to list
-    setPilots([
-      ...pilots,
-      {
-        id: uuid(),
-        name,
-      }
-    ]);
+    // First check if already exists
+    const candidatePilotIndex = pilots.findIndex(pilot => pilot.name.toLowerCase() === name.toLowerCase());
+
+    // If we find them, then we just simply re-enable them, and their history is thus preserved
+    if (candidatePilotIndex !== -1) {
+      const candidatePilot = pilots[candidatePilotIndex];
+      setPilots([
+        ...pilots.slice(0, candidatePilotIndex),
+        {
+          ...candidatePilot,
+          active: true,
+        },
+        ...pilots.slice(candidatePilotIndex + 1),
+      ]);
+    } else {
+      // When nothing is found, we create a new pilot.
+      setPilots([
+        ...pilots,
+        {
+          id: uuid(),
+          name,
+          active: true,
+        },
+      ]);
+    }
   }, [pilots, setPilots]);
 
   const deletePilot = useCallback((id) => {
@@ -33,17 +50,20 @@ export default () => {
     setAssignedPilots({
       ...updatedAssignedPilots,
     });
-    console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', updatedAssignedPilots);
 
     // Set pilot inactive, but never really forget him/her
     const indexOfPilot = pilots.findIndex(pilotFromCollection => pilotFromCollection.id === id);
+    const updatedPilot = pilots[indexOfPilot]
 
     setPilots([
       ...pilots.slice(0, indexOfPilot),
-
+      {
+        ...updatedPilot,
+        active: false,
+      },
       ...pilots.slice(indexOfPilot + 1),
     ]);
-  }, [pilots, setPilots]);
+  }, [pilots, setPilots, assignedPilots, setAssignedPilots]);
 
   const incrementType = (pilot) => {
     const currentIndex = TYPES.findIndex(type => type === pilot.type);
@@ -73,7 +93,7 @@ export default () => {
     <div className="container pilot-list-container">
       <div className="pilot-list">
         {
-          pilots.map((pilot) => (
+          pilots.filter(({ active }) => active).map((pilot) => (
             <Pilot key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
           ))
         }
