@@ -3,6 +3,10 @@ body {
   font-weight: normal;
 }
 
+html {
+  overscroll-behavior-y: contain;
+}
+
 .container {
   padding: 20px;
 

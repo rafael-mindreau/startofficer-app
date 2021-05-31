@@ -27,7 +27,7 @@ export default ({
   const clickMenuItem = useCallback((e) => {
     setPilotMenuState(false);
     e.stopPropagation();
-  }, [isPilotMenuOpen, setPilotMenuState]);
+  }, [setPilotMenuState]);
 
   return (
     <div onClick={() => setPilotMenuState(true)} className="pilot-container assignable">

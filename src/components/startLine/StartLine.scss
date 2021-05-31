@@ -2,6 +2,10 @@
   height: calc(100vh - 60px);
   overflow: auto;
 
+  .list-container {
+    padding-bottom: 100px;
+  }
+
   .starting-line-position {
     display: flex;
 

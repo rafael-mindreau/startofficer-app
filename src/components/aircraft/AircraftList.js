@@ -46,14 +46,22 @@ export default () => {
   }, [selectedAircraft]);
 
   const toggleAircraft = useCallback((tailNumber) => {
+    // Get the amount of selected aircraft currently available
+    // We use this to set the order in the list for the starting line
+    const amountOfSelectedAircraft = Object.entries(selectedAircraft).length;
+
     const updatedSelectedAircraft = {
       ...selectedAircraft,
     }
 
     if (updatedSelectedAircraft[tailNumber]) {
+      // Delete from map if already exists
       delete updatedSelectedAircraft[tailNumber];
     } else {
+      // Add to mapping when it doesn't exist yet
       updatedSelectedAircraft[tailNumber] = gliders.find(glider => glider.tailNumber === tailNumber);
+      // This makes it so that the order is generated onto the aircraft when it's added into rotation
+      updatedSelectedAircraft[tailNumber].order = amountOfSelectedAircraft;
     }
 
     setSelectedAircraft(updatedSelectedAircraft);
