@@ -8,12 +8,15 @@
 
   .starting-line-position {
     display: flex;
-
-    border-bottom: 1px solid rgba(#ffffff, 0.3);
   }
 
   .pilot {
     width: calc(100% - 150px);
+    border-bottom: 1px solid rgba(#ffffff, 0.3);
+
+    &.is-dragging {
+      border-top: 1px solid rgba(#ffffff, 0.3);
+    }
   }
 
   .grass {

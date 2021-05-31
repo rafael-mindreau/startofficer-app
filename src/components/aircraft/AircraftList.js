@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import Aircraft from 'components/aircraft/Aircraft';
 import useLocalStorage from 'hooks/useLocalStorage';
-import { v4 as uuid } from 'uuid';
 import './AircraftList.scss';
 
 const CLUB_GLIDERS = [

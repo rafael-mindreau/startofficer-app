@@ -16,12 +16,27 @@ const getDraggableStyle = (isDragging, providedStyle) => {
       )})`,
     };
   }
-  console.log('%cDEBUG', 'background-color: #1962dd; padding: 5px; border-radius: 3px; font-weight: bold; color: white', result);
+
   return {
     userSelect: 'none',
     ...providedStyle,
     ...result,
   };
+};
+
+/**
+ * Literally swap two elements in a list
+ * @param  {Array}  list  The array on which to perform the changes
+ * @param  {Number} from  Index of the point A
+ * @param  {Number} to    Index of point B
+ * @return {Array}        Exactly the same as the given array except for that from and to are now swapped
+ */
+const reorder = (list, from, to) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(from, 1);
+  result.splice(to, 0, removed);
+
+  return result;
 };
 
 export default () => {
@@ -34,21 +49,20 @@ export default () => {
     destination
   }) => {
     if (!destination) {
-      console.log('%cNO DEST', 'background-color: #e33928; padding: 5px; border-radius: 3px; font-weight: bold; color: white');
       return;
     }
 
+    // Swap the source and destination aircraft
     const updatedSelectedAircraft = {...selectedAircraft};
+    const items = reorder(Object.values(updatedSelectedAircraft).sort((a, b) => a.order - b.order), source.index, destination.index);
 
-    console.log('%cSOURCE', 'background-color: #23aff4; padding: 5px; border-radius: 3px; font-weight: bold; color: white', Object.values(updatedSelectedAircraft).find(({ order }) => order === source.index));
-    console.log('%cDESTINATION', 'background-color: #339977; padding: 5px; border-radius: 3px; font-weight: bold; color: white', Object.values(updatedSelectedAircraft).find(({ order }) => order === destination.index));
-
-    Object.values(updatedSelectedAircraft).find(({ order }) => order === destination.index).order = source.index;
-    Object.values(updatedSelectedAircraft).find(({ order }) => order === source.index).order = destination.index;
-
-    console.log('%cRESULT SET', 'background-color: #e09579; padding: 5px; border-radius: 3px; font-weight: bold; color: white', updatedSelectedAircraft);
-
-    setSelectedAircraft({...updatedSelectedAircraft});
+    // Update the selected gliders' order in the list
+    setSelectedAircraft({
+      ...Object.fromEntries(items.map((item, index) => ({
+        ...item,
+        order: index,
+      })).map(item => ([item.tailNumber, item]))),
+    });
   }, [selectedAircraft, setSelectedAircraft]);
 
   const assignPilot = useCallback((pilotId, tailNumber) => {
@@ -90,7 +104,7 @@ export default () => {
                         <div className="grass">
                           <Aircraft aircraft={glider} />
                         </div>
-                        <div className="container pilot">
+                        <div className={`container pilot ${snapshot.isDragging ? 'is-dragging' : ''}`}>
                           <AssignedPilot unAssign={unAssignPilot} assign={assignPilot} aircraft={glider} pilot={assignments[glider.tailNumber]} />
                         </div>
                       </div>

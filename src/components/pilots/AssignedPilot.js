@@ -32,7 +32,6 @@ export default ({
   return (
     <div onClick={() => setPilotMenuState(true)} className="pilot-container assignable">
       <h2>{name ? name : ''}</h2>
-
       {
         isPilotMenuOpen ? (
           <div onClick={(e) => clickMenuItem(e)} ref={ref} className="pilot-selection-menu">
