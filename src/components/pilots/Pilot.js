@@ -9,6 +9,7 @@ export default ({
     id,
     name,
     type,
+    starts,
   } = {},
 }) => (
   <div className="pilot-container">
@@ -16,6 +17,7 @@ export default ({
     {
       hideControls ? '' : (
         <div className="controls">
+          <span className="starts-badge">{starts}</span>
           <span onClick={() => toggleType(id)} className={`type-button ${type}`}>{type ? type : '???'}</span>
           <i onClick={remove} className="fas fa-times"></i>
         </div>

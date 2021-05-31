@@ -39,6 +39,7 @@ export default () => {
           id: uuid(),
           name,
           active: true,
+          starts: 0,
         },
       ]);
     }

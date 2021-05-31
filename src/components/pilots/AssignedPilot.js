@@ -36,7 +36,7 @@ export default ({
         isPilotMenuOpen ? (
           <div onClick={(e) => clickMenuItem(e)} ref={ref} className="pilot-selection-menu">
             {
-              pilots.map(({ id, name }) => (
+              pilots.filter(({ active }) => active).map(({ id, name }) => (
                 <p key={id} onClick={() => clickPilot(id, tailNumber)}>{name}</p>
               ))
             }

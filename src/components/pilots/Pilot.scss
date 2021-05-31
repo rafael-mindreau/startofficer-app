@@ -23,6 +23,18 @@
   .controls {
     display: flex;
 
+    .starts-badge {
+      padding: 5px 10px;
+      margin-right: 10px;
+      border-radius: 20px;
+
+      background-color: #e4503b;
+      color: white;
+
+      font-weight: bold;
+      line-height: 20px;
+    }
+
     .type-button {
       display: block;
       margin-right: 30px;
