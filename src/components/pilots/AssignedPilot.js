@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import useLocalStorage from 'hooks/useLocalStorage';
 import useClickOutside from 'hooks/useClickOutside';
 import './Pilot.scss';

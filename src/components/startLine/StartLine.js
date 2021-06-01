@@ -1,10 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Aircraft from 'components/aircraft/Aircraft';
 import AssignedPilot from 'components/pilots/AssignedPilot';
 import useLocalStorage from 'hooks/useLocalStorage';
+import useClickOutside from 'hooks/useClickOutside';
 import dayjs from 'dayjs';
 import './StartLine.scss';
+
+const LOGBOOK_TIME_FORMAT = 'DD-MM-YYYY HH:mm';
 
 const getDraggableStyle = (isDragging, providedStyle) => {
   const { transform } = providedStyle;
@@ -42,9 +45,14 @@ const reorder = (list, from, to) => {
 
 export default () => {
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
-  const [pilots] = useLocalStorage('pilots', []);
+  const [pilots, setPilots] = useLocalStorage('pilots', []);
   const [assignments, setAssignments] = useLocalStorage('assigned-pilots', {});
   const [flyingGliders, setFlyingGliders] = useLocalStorage('flying', {});
+  const [logBook, setLogbook] = useLocalStorage('flights', []);
+  const [showFlyingAircraft, setShowFlyingAircraft] = useState(false);
+
+  const flyingAircraftRef = useRef();
+  useClickOutside(flyingAircraftRef, () => setShowFlyingAircraft(false));
 
   const swapPositions = useCallback((from, to) => {
     // Swap the source and destination aircraft
@@ -59,6 +67,52 @@ export default () => {
       })).map(item => ([item.tailNumber, item]))),
     });
   }, [selectedAircraft, setSelectedAircraft]);
+
+  const land = useCallback((glider) => {
+    // Close the landing menu
+    setShowFlyingAircraft(false);
+
+    // Make an entry for the logbook
+    const { takeOffTime, pilotInCommand } = flyingGliders[glider.tailNumber];
+    const landingTime = dayjs().format(LOGBOOK_TIME_FORMAT);
+    const durationOfFlight = dayjs.unix(dayjs(landingTime).unix() - dayjs(takeOffTime).unix()).format('HH:mm');
+    const updatedLogBook = [
+      ...logBook,
+      {
+        glider,
+        pilotInCommand,
+        takeOffTime,
+        landingTime,
+        durationOfFlight,
+      },
+    ];
+
+    setLogbook(updatedLogBook);
+
+    // Remove the flying state from the list
+    const updatedFlyingGliders = {...flyingGliders};
+    delete updatedFlyingGliders[glider.tailNumber];
+
+    setFlyingGliders(updatedFlyingGliders);
+
+    // Unassign the landed glider
+    const updatedAssignments = {...assignments};
+    delete updatedAssignments[glider.tailNumber];
+
+    setAssignments(updatedAssignments);
+
+    // Increment start count on pilotInCommand
+    const candidatePilotIndex = pilots.findIndex(pilot => pilot.id === pilotInCommand.id);
+    const candidatePilot = pilots[candidatePilotIndex];
+    setPilots([
+      ...pilots.slice(0, candidatePilotIndex),
+      {
+        ...candidatePilot,
+        starts: candidatePilot.starts + 1,
+      },
+      ...pilots.slice(candidatePilotIndex + 1),
+    ]);
+  }, [assignments, flyingGliders, logBook, pilots, setAssignments, setFlyingGliders, setLogbook, setPilots]);
 
   const launch = useCallback(() => {
     // Launch button will launch the frontmost glider
@@ -76,7 +130,7 @@ export default () => {
     const updatedFlyingGliders = { ...flyingGliders };
     updatedFlyingGliders[frontAircraft.tailNumber] = {
       pilotInCommand: assignments[frontAircraft.tailNumber],
-      takeOffTime: dayjs().format('DD-MM-YYYY HH:mm'),
+      takeOffTime: dayjs().format(LOGBOOK_TIME_FORMAT),
     };
 
     setFlyingGliders({
@@ -151,12 +205,25 @@ export default () => {
           </Droppable>
         </DragDropContext>
       </div>
+
+      {
+        showFlyingAircraft ? (
+          <div ref={flyingAircraftRef} className="flying-gliders">
+            {
+              Object.keys(flyingGliders).map(tailNumber => selectedAircraft[tailNumber]).map(glider => (
+                <Aircraft onClick={() => land(glider)} key={glider.id} aircraft={glider} />
+              ))
+            }
+          </div>
+        ) : ''
+      }
+
       <div className="startline-controls">
         <div className="left">
           <button onClick={launch} className="button launch-button">
             <i className="fas fa-plane-departure"></i>
           </button>
-          <button className="button land-button">
+          <button onClick={() => setShowFlyingAircraft(true)} className="button land-button">
             <i className="fas fa-plane-arrival"></i>
           </button>
         </div>
