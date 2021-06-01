@@ -5,14 +5,15 @@ import './Pilot.scss';
 
 export default ({
   assign,
-  unAssign,
   aircraft: {
     tailNumber,
   },
+  isFlying,
   pilot: {
     id,
     name = 'Not Assigned',
   } = {},
+  unAssign,
 }) => {
   const [isPilotMenuOpen, setPilotMenuState] = useState(false);
   const [pilots] = useLocalStorage('pilots', []);
@@ -30,7 +31,8 @@ export default ({
   }, [setPilotMenuState]);
 
   return (
-    <div onClick={() => setPilotMenuState(true)} className="pilot-container assignable">
+    // Some explanation for "setPilotMenuState(!isFlying)}" - This disables opening the menu for a flying ... "kist"
+    <div onClick={() => setPilotMenuState(!isFlying)} className="pilot-container assignable">
       <h2>{name ? name : ''}</h2>
       {
         isPilotMenuOpen ? (

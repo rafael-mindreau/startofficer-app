@@ -1,9 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Aircraft from 'components/aircraft/Aircraft';
 import AssignedPilot from 'components/pilots/AssignedPilot';
 import useLocalStorage from 'hooks/useLocalStorage';
-import useClickOutside from 'hooks/useClickOutside';
 import dayjs from 'dayjs';
 import './StartLine.scss';
 
@@ -45,14 +44,11 @@ const reorder = (list, from, to) => {
 
 export default () => {
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
-  const [pilots, setPilots] = useLocalStorage('pilots', []);
+  const [pilots] = useLocalStorage('pilots', []);
   const [assignments, setAssignments] = useLocalStorage('assigned-pilots', {});
   const [flyingGliders, setFlyingGliders] = useLocalStorage('flying', {});
   const [logBook, setLogbook] = useLocalStorage('flights', []);
   const [showFlyingAircraft, setShowFlyingAircraft] = useState(false);
-
-  const flyingAircraftRef = useRef();
-  useClickOutside(flyingAircraftRef, () => setShowFlyingAircraft(false));
 
   const swapPositions = useCallback((from, to) => {
     // Swap the source and destination aircraft
@@ -108,7 +104,8 @@ export default () => {
     const pilotInCommand = assignments[frontAircraft.tailNumber];
 
     // You cannot launch an empty glider
-    if (!pilotInCommand) {
+    // You cannot launch a glider that is already flying, you silly :)
+    if (!pilotInCommand || flyingGliders[frontAircraft.tailNumber]) {
       return;
     }
 
@@ -180,7 +177,7 @@ export default () => {
                             <Aircraft aircraft={glider} />
                           </div>
                           <div className={`container pilot ${snapshot.isDragging ? 'is-dragging' : ''}`}>
-                            <AssignedPilot unAssign={unAssignPilot} assign={assignPilot} aircraft={glider} pilot={assignments[glider.tailNumber]} />
+                            <AssignedPilot isFlying={flyingGliders[glider.tailNumber]} unAssign={unAssignPilot} assign={assignPilot} aircraft={glider} pilot={assignments[glider.tailNumber]} />
                           </div>
                         </div>
                       )}
@@ -196,7 +193,7 @@ export default () => {
 
       {
         showFlyingAircraft ? (
-          <div ref={flyingAircraftRef} className="flying-gliders">
+          <div className="flying-gliders">
             {
               Object.keys(flyingGliders).map(tailNumber => selectedAircraft[tailNumber]).map(glider => (
                 <Aircraft onClick={() => land(glider)} key={glider.id} aircraft={glider} />
@@ -211,7 +208,7 @@ export default () => {
           <button onClick={launch} className="button launch-button">
             <i className="fas fa-plane-departure"></i>
           </button>
-          <button onClick={() => setShowFlyingAircraft(true)} className="button land-button">
+          <button onClick={() => setShowFlyingAircraft(!showFlyingAircraft)} className="button land-button">
             <i className="fas fa-plane-arrival"></i>
           </button>
         </div>
