@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Aircraft from 'components/aircraft/Aircraft';
 import AssignedPilot from 'components/pilots/AssignedPilot';

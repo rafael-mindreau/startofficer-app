@@ -32,6 +32,11 @@ const CLUB_GLIDERS = [
 
 export default () => {
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
+  const [flyingGliders] = useLocalStorage('flying', {});
+
+  const isFlying = useCallback((tailNumber) => {
+    return flyingGliders[tailNumber] !== undefined;
+  }, [flyingGliders]);
 
   const gliders = useMemo(() => {
     return CLUB_GLIDERS.map((glider) => {
@@ -53,7 +58,7 @@ export default () => {
       ...selectedAircraft,
     }
 
-    if (updatedSelectedAircraft[tailNumber]) {
+    if (updatedSelectedAircraft[tailNumber] && !isFlying(tailNumber)) {
       // Delete from map if already exists
       delete updatedSelectedAircraft[tailNumber];
 
@@ -73,7 +78,7 @@ export default () => {
     }
 
     setSelectedAircraft(updatedSelectedAircraft);
-  }, [selectedAircraft, setSelectedAircraft, gliders]);
+  }, [selectedAircraft, isFlying, setSelectedAircraft, gliders]);
 
   return (
     <div className="container aircraft-list-container">
