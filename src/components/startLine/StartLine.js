@@ -100,19 +100,7 @@ export default () => {
     delete updatedAssignments[glider.tailNumber];
 
     setAssignments(updatedAssignments);
-
-    // Increment start count on pilotInCommand
-    const candidatePilotIndex = pilots.findIndex(pilot => pilot.id === pilotInCommand.id);
-    const candidatePilot = pilots[candidatePilotIndex];
-    setPilots([
-      ...pilots.slice(0, candidatePilotIndex),
-      {
-        ...candidatePilot,
-        starts: candidatePilot.starts + 1,
-      },
-      ...pilots.slice(candidatePilotIndex + 1),
-    ]);
-  }, [assignments, flyingGliders, logBook, pilots, setAssignments, setFlyingGliders, setLogbook, setPilots]);
+  }, [assignments, flyingGliders, logBook, setAssignments, setFlyingGliders, setLogbook]);
 
   const launch = useCallback(() => {
     // Launch button will launch the frontmost glider
