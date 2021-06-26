@@ -183,7 +183,7 @@ export default () => {
         return a.order - b.order;
       }
 
-      return a.starts - b.starts;
+      return getFlightsForPilot(a.id) - getFlightsForPilot(b.id);
     });
 
     let assignmentsToPush = [];

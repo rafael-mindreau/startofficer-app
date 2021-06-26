@@ -16,7 +16,7 @@ import 'styles/general.scss';
 
 export default () => (
   <div>
-    <Router>
+    <Router basename="/startofficer-app/">
       <Switch>
         <Route path="/" exact>
           <StartLine />
