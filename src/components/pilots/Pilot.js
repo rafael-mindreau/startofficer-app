@@ -6,6 +6,7 @@ export default ({
   remove,
   toggleType,
   hideControls,
+  hasPreferences,
   pilot: {
     id,
     name,
@@ -21,7 +22,14 @@ export default ({
 
   return (
     <div onClick={onClick} className="pilot-container">
-      <h2>{name ? name : ''}</h2>
+      <div className="flex">
+        <h2>{name ? name : ''}</h2>
+        {
+          hasPreferences ? (
+            <span className="led red" />
+          ) : ''
+        }
+      </div>
       {
         hideControls ? '' : (
           <div className="controls">

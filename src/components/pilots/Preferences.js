@@ -40,7 +40,7 @@ export default () => {
     <div className="container preferences-container">
       {
         pilots.map((pilot) => (
-          <Pilot key={pilot.id} onClick={() => showPreferences(pilot)} pilot={pilot} hideControls />
+          <Pilot key={pilot.id} onClick={() => showPreferences(pilot)} pilot={pilot} hasPreferences={Object.keys(preferences[pilot.id]).length} hideControls />
         ))
       }
 

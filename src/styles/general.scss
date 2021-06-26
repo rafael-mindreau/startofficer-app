@@ -95,6 +95,25 @@ nav.tabs {
   }
 }
 
+/* Lighting
+	 ========================================================================== */
+
+.led {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 20px;
+  background-color: #c9c9c9;
+
+  &.blue {
+    background-color: #1785f7;
+  }
+
+  &.red {
+    background-color: #e0443a;
+  }
+}
+
 /* Set up fonts
 	 ========================================================================== */
 

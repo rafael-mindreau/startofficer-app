@@ -17,6 +17,7 @@ export default () => {
   const [pilots, setPilots] = useLocalStorage('pilots', []);
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
   const [flights, setFlights] = useLocalStorage('flights', []);
+  const [preferences, setPreferences] = useLocalStorage('pilot-preferences', {});
   const [assignedPilots, setAssignedPilots] = useLocalStorage('assigned-pilots', []);
   const [showWarning, setShowWarning] = useState(false);
   const [warningText, setWarningText] = useState(false);
@@ -24,32 +25,51 @@ export default () => {
   const addPilot = useCallback((name) => {
     // First check if already exists
     const candidatePilotIndex = pilots.findIndex(pilot => pilot.name.toLowerCase() === name.toLowerCase());
+    let pilot = {};
 
     // If we find them, then we just simply re-enable them, and their history is thus preserved
     if (candidatePilotIndex !== -1) {
       const candidatePilot = pilots[candidatePilotIndex];
+      pilot = {
+        ...candidatePilot,
+        priority: pilots.filter(pilot => pilot.active).length,
+        active: true,
+      };
+
       setPilots([
         ...pilots.slice(0, candidatePilotIndex),
         {
-          ...candidatePilot,
-          priority: pilots.filter(pilot => pilot.active).length,
-          active: true,
+          ...pilot,
         },
         ...pilots.slice(candidatePilotIndex + 1),
       ]);
     } else {
       // When nothing is found, we create a new pilot.
+      pilot = {
+        id: uuid(),
+        priority: pilots.filter(pilot => pilot.active).length,
+        name,
+        active: true,
+      };
       setPilots([
         ...pilots,
         {
-          id: uuid(),
-          priority: pilots.filter(pilot => pilot.active).length,
-          name,
-          active: true,
+          ...pilot,
         },
       ]);
     }
-  }, [pilots, setPilots]);
+
+    if (!preferences[pilot.id]) {
+      // Create default preferences for pilot
+      const updatedPreferences = {
+        ...preferences,
+      };
+
+      updatedPreferences[pilot.id] = {};
+
+      setPreferences(updatedPreferences);
+    }
+  }, [pilots, preferences, setPilots, setPreferences]);
 
   const deletePilot = useCallback((id) => {
     // Unassign if assigned to any "kist"
@@ -122,7 +142,7 @@ export default () => {
       <div className="pilot-list">
         {
           pilots.filter(({ active }) => active).sort((a, b) => a.priority - b.priority).map((pilot) => (
-            <Pilot key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
+            <Pilot hasPreferences={preferences[pilot.id]} key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
           ))
         }
       </div>
