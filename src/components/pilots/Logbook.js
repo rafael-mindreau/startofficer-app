@@ -25,7 +25,7 @@ export default () => {
     <div className="container logbook-container">
       {
         flights.map((flight) => (
-          <LogbookEntry onClick={() => excludeFlight(flight)} flight={flight} />
+          <LogbookEntry key={flight.id} onClick={() => excludeFlight(flight)} flight={flight} />
         ))
       }
     </div>

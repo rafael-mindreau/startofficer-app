@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { LOGBOOK_TIME_FORMAT } from 'constants/constants';
+import { DEFAULT_PREFERENCES } from 'constants/default-preferences';
 import './StartLine.scss';
 
 dayjs.extend(duration);
@@ -51,10 +52,16 @@ const reorder = (list, from, to) => {
 export default () => {
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
   const [pilots] = useLocalStorage('pilots', []);
+  const [preferences] = useLocalStorage('pilot-preferences', []);
   const [assignments, setAssignments] = useLocalStorage('assigned-pilots', {});
   const [flyingGliders, setFlyingGliders] = useLocalStorage('flying', {});
   const [logBook, setLogbook] = useLocalStorage('flights', []);
   const [showFlyingAircraft, setShowFlyingAircraft] = useState(false);
+
+  // TODO this is also used in Pilot.js - should separate this to utils, but I'm lazy right now so yah....
+  const getFlightsForPilot = useCallback((pilotId) => {
+    return logBook.filter(({ exclude, pilotInCommand: { id } }) => !exclude && id === pilotId).length;
+  }, [logBook]);
 
   const swapPositions = useCallback((from, to) => {
     // Swap the source and destination aircraft
@@ -162,8 +169,78 @@ export default () => {
   }, [flyingGliders, showFlyingAircraft]);
 
   const autoSchedulePressed = useCallback(() => {
+    // Get a list of all unassigned aircraft
+    const assignedTailNumbers = Object.keys(assignments);
+    const unassginedGliders = Object.values(selectedAircraft).filter(glider => assignedTailNumbers.indexOf(glider.tailNumber) === -1);
 
-  }, []);
+    const activePilots = pilots.filter((pilot) => {
+      // Check if pilot isn't already assigned and if they are active
+      const pilotHasAssignment = Object.values(assignments).some(a => a.id === pilot.id);
+
+      return !pilotHasAssignment && pilot.active;
+    }).sort((a, b) => {
+      if (getFlightsForPilot(a.id) === getFlightsForPilot(b.id)) {
+        return a.order - b.order;
+      }
+
+      return a.starts - b.starts;
+    });
+
+    let assignmentsToPush = [];
+
+    // For every unassigned glider, find the first best pilot that can fly it
+    unassginedGliders.sort((a, b) => a.order - b.order).forEach((unassginedGlider, index) => {
+      // Make sure to sort pilots based on their starts, the lowest starts will go first
+      activePilots.filter((pilot) => {
+        return assignmentsToPush.map(({ pilotId }) => pilotId).indexOf(pilot.id) === -1;
+      }).some(pilot => {
+        // Get pilot preferences first
+        let preference = preferences[pilot.id];
+
+        if (!preference) {
+          // If this pilot has no specific preferences, their type takes presidence
+          const { type } = pilot;
+
+          if (!type) {
+            // If pilot has neither preference nor type, they cannot be taken into account for scheduling
+            // Make sure all pilots have a type assigned, otherwise they will require manual assigning
+            return false;
+          }
+
+          preference = DEFAULT_PREFERENCES[type];
+        } else {
+          preference = Object.keys(preference);
+        }
+
+        // See if we can schedule this pilot for this aircraft
+        if (preference.indexOf(unassginedGlider.tailNumber) !== -1) {
+          assignmentsToPush = [
+            ...assignmentsToPush,
+            {
+              pilotId: pilot.id,
+              tailNumber: unassginedGlider.tailNumber,
+            },
+          ];
+
+          // Return true to stop looping through candidates, we just found one
+          return true;
+        }
+
+        return false;
+      });
+    });
+
+    const updatedAssignments = {...assignments};
+
+    assignmentsToPush.forEach(({
+      pilotId: idOfPilotToAssign,
+      tailNumber,
+    }) => {
+      updatedAssignments[tailNumber] = pilots.find(({ id }) => idOfPilotToAssign === id );
+    });
+
+    setAssignments(updatedAssignments);
+  }, [assignments, getFlightsForPilot, pilots, preferences, selectedAircraft, setAssignments]);
 
   return (
     <>
