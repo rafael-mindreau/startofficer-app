@@ -197,7 +197,7 @@ export default () => {
         // Get pilot preferences first
         let preference = preferences[pilot.id];
 
-        if (!preference) {
+        if (!preference || (preference && !Object.keys(preference).length)) {
           // If this pilot has no specific preferences, their type takes presidence
           const { type } = pilot;
 
@@ -313,7 +313,7 @@ export default () => {
         </div>
 
         <div className="right">
-          <button className="button">
+          <button onClick={() => setAssignments({})} className="button">
             <i className="fas fa-redo"></i>
           </button>
         </div>
