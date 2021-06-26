@@ -11,6 +11,7 @@ export default ({
     name,
     type,
   } = {},
+  onClick = () => {},
 }) => {
   const [logBook] = useLocalStorage('flights', []);
 
@@ -19,7 +20,7 @@ export default ({
   }, [logBook]);
 
   return (
-    <div className="pilot-container">
+    <div onClick={onClick} className="pilot-container">
       <h2>{name ? name : ''}</h2>
       {
         hideControls ? '' : (

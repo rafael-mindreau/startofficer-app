@@ -6,8 +6,8 @@ export default ({
   aircraft: {
     tailNumber,
     tailNumberColor,
-    selected,
   },
+  selected = false,
   onClick = () => {},
 }) => {
   const textStyle = {

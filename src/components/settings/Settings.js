@@ -13,7 +13,7 @@ export default () => {
 
   return (
     <div className="container settings-container">
-      <NavLink to="/preferences">
+      <NavLink to="/pilot-preferences">
         <button className="settings-button blue">Pilot Preferences</button>
       </NavLink>
       <NavLink to="/logbook">

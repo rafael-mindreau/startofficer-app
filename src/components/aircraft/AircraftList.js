@@ -1,36 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
 import Aircraft from 'components/aircraft/Aircraft';
 import useLocalStorage from 'hooks/useLocalStorage';
+import { CLUB_GLIDERS } from 'constants/gliders';
 import './AircraftList.scss';
 
-const CLUB_GLIDERS = [
-  {
-    tailNumber: '808',
-    tailNumberColor: '#12428a',
-  },
-  {
-    tailNumber: 'ZD',
-    tailNumberColor: '#d42e2e',
-  },
-  {
-    tailNumber: 'LUC',
-    tailNumberColor: '#ff7f09',
-  },
-  {
-    tailNumber: 'FD',
-    tailNumberColor: '#b42323',
-  },
-  {
-    tailNumber: 'WD',
-    tailNumberColor: '#787878',
-  },
-  {
-    tailNumber: 'WB1',
-    tailNumberColor: '#787878',
-  },
-];
-
-export default () => {
+export default ({
+  onClick,
+  selectedPreferences,
+  isPreferences,
+}) => {
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
   const [flyingGliders] = useLocalStorage('flying', {});
 
@@ -82,13 +60,25 @@ export default () => {
 
   return (
     <div className="container aircraft-list-container">
-      <div className="aircraft-list">
-        {
-          gliders.map((glider) => (
-            <Aircraft onClick={toggleAircraft} key={glider.tailNumber} aircraft={glider} selectable />
-          ))
-        }
-      </div>
+      {
+        isPreferences ? (
+          <div className="aircraft-list preferences-for-pilot">
+            {
+              gliders.map((glider) => (
+                <Aircraft onClick={() => onClick(glider)} key={glider.tailNumber} aircraft={glider} selected={selectedPreferences && selectedPreferences[glider.tailNumber]} selectable />
+              ))
+            }
+          </div>
+        ) : (
+          <div className="aircraft-list">
+            {
+              gliders.map((glider) => (
+                <Aircraft onClick={toggleAircraft} key={glider.tailNumber} aircraft={glider} selected={glider.selected} selectable />
+              ))
+            }
+          </div>
+        )
+      }
     </div>
   )
 };

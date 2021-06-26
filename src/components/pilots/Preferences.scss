@@ -1,0 +1,33 @@
+.container.preferences-container {
+  position: relative;
+  height: calc(100vh - 60px);
+  padding-bottom: 150px;
+
+  .preferences {
+    position: absolute;
+    height: calc(100vh - 60px);
+    padding: 10px;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .aircraft-list-container {
+      height: unset;
+      padding: unset;
+    }
+
+    button {
+      margin-top: 10px;
+      width: 100%;
+    }
+  }
+}
