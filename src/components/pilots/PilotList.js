@@ -142,7 +142,7 @@ export default () => {
       <div className="pilot-list">
         {
           pilots.filter(({ active }) => active).sort((a, b) => a.priority - b.priority).map((pilot) => (
-            <Pilot hasPreferences={preferences[pilot.id]} key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
+            <Pilot hasPreferences={Object.keys(preferences[pilot.id]).length} key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
           ))
         }
       </div>
