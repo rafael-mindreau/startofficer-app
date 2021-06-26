@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/startofficer-app/static/css/main.3da1d74c.chunk.css",
+    "main.js": "/startofficer-app/static/js/main.dacc96e9.chunk.js",
+    "main.js.map": "/startofficer-app/static/js/main.dacc96e9.chunk.js.map",
+    "runtime-main.js": "/startofficer-app/static/js/runtime-main.593cbaf1.js",
+    "runtime-main.js.map": "/startofficer-app/static/js/runtime-main.593cbaf1.js.map",
+    "static/js/2.add7e14f.chunk.js": "/startofficer-app/static/js/2.add7e14f.chunk.js",
+    "static/js/2.add7e14f.chunk.js.map": "/startofficer-app/static/js/2.add7e14f.chunk.js.map",
+    "index.html": "/startofficer-app/index.html",
+    "precache-manifest.d5719f4356ed01e225566d5d1daf0ae8.js": "/startofficer-app/precache-manifest.d5719f4356ed01e225566d5d1daf0ae8.js",
+    "service-worker.js": "/startofficer-app/service-worker.js",
+    "static/css/main.3da1d74c.chunk.css.map": "/startofficer-app/static/css/main.3da1d74c.chunk.css.map",
+    "static/js/2.add7e14f.chunk.js.LICENSE.txt": "/startofficer-app/static/js/2.add7e14f.chunk.js.LICENSE.txt",
+    "static/media/general.scss": "/startofficer-app/static/media/Poppins-Regular.8b6af8e5.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.593cbaf1.js",
+    "static/js/2.add7e14f.chunk.js",
+    "static/css/main.3da1d74c.chunk.css",
+    "static/js/main.dacc96e9.chunk.js"
+  ]
+}
