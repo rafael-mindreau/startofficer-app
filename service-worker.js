@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/startofficer-app/precache-manifest.e2d259f3e9506b575d6a130be5ac70fc.js"
+  "/startofficer-app/precache-manifest.31af87ed5201127cd893ad4837e5dea8.js"
 );
 
 self.addEventListener('message', (event) => {
