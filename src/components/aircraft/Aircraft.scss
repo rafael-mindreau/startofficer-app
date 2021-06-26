@@ -33,3 +33,49 @@
     border-radius: 100%;
   }
 }
+
+.aircraft-with-pilot-container {
+  display: flex;
+  justify-content: space-between;
+
+  .flex {
+    display: flex;
+  }
+
+  .tail-number {
+    margin-right: 10px;
+    display: block;
+    height: 50px;
+    width: 50px;
+
+    background-color: white;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 5px;
+  }
+
+  &.logbook {
+    overflow: hidden;
+    border-radius: 5px;
+
+    .timetable {
+      p {
+        margin-right: 20px;
+      }
+    }
+
+    &.exclude {
+      background-color: rgba(#ee8481, 0.48);
+    }
+  }
+
+  p {
+    color: white;
+    line-height: 50px;
+
+    font-size: 20px;
+    font-weight: bold;
+  }
+}

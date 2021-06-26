@@ -15,7 +15,7 @@ export default ({
   const [logBook] = useLocalStorage('flights', []);
 
   const getFlightsForPilot = useCallback((pilotId) => {
-    return logBook.filter(({ pilotInCommand: { id } }) => id === pilotId).length;
+    return logBook.filter(({ exclude, pilotInCommand: { id } }) => !exclude && id === pilotId).length;
   }, [logBook]);
 
   return (

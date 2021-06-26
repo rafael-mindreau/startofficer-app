@@ -1,12 +1,18 @@
 import React, { useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Aircraft from 'components/aircraft/Aircraft';
+import AircraftWithPilot from 'components/aircraft/AircraftWithPilot';
 import AssignedPilot from 'components/pilots/AssignedPilot';
 import useLocalStorage from 'hooks/useLocalStorage';
+import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { LOGBOOK_TIME_FORMAT } from 'constants/constants';
 import './StartLine.scss';
 
-const LOGBOOK_TIME_FORMAT = 'DD-MM-YYYY HH:mm';
+dayjs.extend(duration);
+dayjs.extend(customParseFormat);
 
 const getDraggableStyle = (isDragging, providedStyle) => {
   const { transform } = providedStyle;
@@ -71,10 +77,11 @@ export default () => {
     // Make an entry for the logbook
     const { takeOffTime, pilotInCommand } = flyingGliders[glider.tailNumber];
     const landingTime = dayjs().format(LOGBOOK_TIME_FORMAT);
-    const durationOfFlight = dayjs.unix(dayjs(landingTime).unix() - dayjs(takeOffTime).unix()).format('HH:mm');
+    const durationOfFlight = dayjs.duration(dayjs(landingTime, LOGBOOK_TIME_FORMAT).diff(dayjs(takeOffTime, LOGBOOK_TIME_FORMAT))).format('HH:mm');
     const updatedLogBook = [
       ...logBook,
       {
+        id: uuid(),
         glider,
         pilotInCommand,
         takeOffTime,
@@ -146,6 +153,18 @@ export default () => {
     setAssignments(updatedAssignments);
   }, [assignments, setAssignments]);
 
+  const landButtonPressed = useCallback(() => {
+    if (!showFlyingAircraft && Object.keys(flyingGliders).length) {
+      setShowFlyingAircraft(true);
+    } else {
+      setShowFlyingAircraft(false);
+    }
+  }, [flyingGliders, showFlyingAircraft]);
+
+  const autoSchedulePressed = useCallback(() => {
+
+  }, []);
+
   return (
     <>
       <div className="container no-padding startline-container">
@@ -196,7 +215,7 @@ export default () => {
           <div className="flying-gliders">
             {
               Object.keys(flyingGliders).map(tailNumber => selectedAircraft[tailNumber]).map(glider => (
-                <Aircraft onClick={() => land(glider)} key={glider.id} aircraft={glider} />
+                <AircraftWithPilot onClick={() => land(glider)} key={glider.tailNumber} pilot={assignments[glider.tailNumber]} aircraft={glider} />
               ))
             }
           </div>
@@ -205,11 +224,14 @@ export default () => {
 
       <div className="startline-controls">
         <div className="left">
-          <button onClick={launch} className="button launch-button">
+          <button onClick={launch} className="button launch-button green">
             <i className="fas fa-plane-departure"></i>
           </button>
-          <button onClick={() => setShowFlyingAircraft(!showFlyingAircraft)} className="button land-button">
+          <button onClick={() => landButtonPressed()} className="button land-button red">
             <i className="fas fa-plane-arrival"></i>
+          </button>
+          <button onClick={() => autoSchedulePressed()} className="button land-button blue">
+            <i className="fas fa-magic"></i>
           </button>
         </div>
 

@@ -2,6 +2,7 @@ import React from 'react';
 import './Aircraft.scss';
 
 export default ({
+  selectable = false,
   aircraft: {
     tailNumber,
     tailNumberColor,
@@ -17,7 +18,7 @@ export default ({
     <span onClick={() => onClick(tailNumber)} style={textStyle} className="aircraft-container">
       <h1>{tailNumber}</h1>
       {
-        selected ? (
+        selectable && selected ? (
           <span className="check-mark">
             <i className="fas fa-check"></i>
           </span>

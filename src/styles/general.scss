@@ -55,6 +55,46 @@ nav.tabs {
   }
 }
 
+/* Dialogs
+	 ========================================================================== */
+
+.confirm-dialog {
+  position: absolute;
+  padding: 10px;
+  top: calc(50vh - 100px);
+  left: 10px;
+  width: calc(100% - 20px);
+
+  background-color: white;
+  color: black;
+  box-sizing: border-box;
+
+  border-radius: 5px;
+
+  h2 {
+    margin-bottom: 30px;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-bottom: 30px;
+    font-size: 18px;
+  }
+
+  .controls {
+    display: flex;
+
+    & > * {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
 /* Set up fonts
 	 ========================================================================== */
 
@@ -84,12 +124,23 @@ button {
   padding: 10px;
   border-radius: 8px;
   font-size: 22px;
+  font-weight: bold;
 
   border: 0;
 
   &.green {
     color: white;
     background-color: #20c95a;
+  }
+
+  &.red {
+    background-color: #df3764;
+    color: white;
+  }
+
+  &.blue {
+    background-color: #2a51f9;
+    color: white;
   }
 
   &:disabled {

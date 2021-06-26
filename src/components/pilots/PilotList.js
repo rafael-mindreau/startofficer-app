@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import Pilot from 'components/pilots/Pilot';
 import PilotPlaceholder from 'components/pilots/PilotPlaceholder';
 import useLocalStorage from 'hooks/useLocalStorage';
@@ -14,7 +15,11 @@ const TYPES = [
 
 export default () => {
   const [pilots, setPilots] = useLocalStorage('pilots', []);
+  const [selectedAircraft, setSelectedAircraft] = useLocalStorage('selected-gliders', {});
+  const [flights, setFlights] = useLocalStorage('flights', []);
   const [assignedPilots, setAssignedPilots] = useLocalStorage('assigned-pilots', []);
+  const [showWarning, setShowWarning] = useState(false);
+  const [warningText, setWarningText] = useState(false);
 
   const addPilot = useCallback((name) => {
     // First check if already exists
@@ -27,6 +32,7 @@ export default () => {
         ...pilots.slice(0, candidatePilotIndex),
         {
           ...candidatePilot,
+          priority: pilots.filter(pilot => pilot.active).length,
           active: true,
         },
         ...pilots.slice(candidatePilotIndex + 1),
@@ -37,6 +43,7 @@ export default () => {
         ...pilots,
         {
           id: uuid(),
+          priority: pilots.filter(pilot => pilot.active).length,
           name,
           active: true,
         },
@@ -89,16 +96,55 @@ export default () => {
     ]);
   }, [pilots, setPilots]);
 
+  const resetButtonPressed = useCallback(() => {
+    const updatedPilots = pilots.map((pilot) => ({
+      ...pilot,
+      active: false,
+    }));
+
+    setSelectedAircraft({});
+    setFlights([]);
+
+    setPilots([
+      ...updatedPilots
+    ]);
+
+    setShowWarning(false);
+  }, [pilots, setFlights, setPilots, setSelectedAircraft]);
+
+  const confirmReset = useCallback(() => {
+    setShowWarning(true);
+    setWarningText('This will reset all pilots, flights, and aircraft! You sure about that?');
+  }, [setShowWarning, setWarningText]);
+
   return (
     <div className="container pilot-list-container">
       <div className="pilot-list">
         {
-          pilots.filter(({ active }) => active).map((pilot) => (
+          pilots.filter(({ active }) => active).sort((a, b) => a.priority - b.priority).map((pilot) => (
             <Pilot key={pilot.id} toggleType={toggleType} remove={() => deletePilot(pilot.id)} pilot={pilot} />
           ))
         }
       </div>
       <PilotPlaceholder addPilot={addPilot} />
+      <button onClick={confirmReset} className="reset-button red">Reset Day <span aria-label="warning" role="img">⚠️</span></button>
+      <NavLink to="/settings">
+        <button className="settings-button blue">Settings</button>
+      </NavLink>
+
+      {
+        showWarning ? (
+          <div className="confirm-dialog">
+            <h2>Are you sure?</h2>
+            <p>{warningText}</p>
+
+            <div className="controls">
+              <button onClick={() => resetButtonPressed()} className="settings-button green">Yes</button>
+              <button onClick={() => setShowWarning(false)} className="settings-button red">No</button>
+            </div>
+          </div>
+        ) : ''
+      }
     </div>
   )
 };

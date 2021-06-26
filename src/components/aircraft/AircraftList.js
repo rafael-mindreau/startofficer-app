@@ -85,7 +85,7 @@ export default () => {
       <div className="aircraft-list">
         {
           gliders.map((glider) => (
-            <Aircraft onClick={toggleAircraft} key={glider.tailNumber} aircraft={glider} />
+            <Aircraft onClick={toggleAircraft} key={glider.tailNumber} aircraft={glider} selectable />
           ))
         }
       </div>

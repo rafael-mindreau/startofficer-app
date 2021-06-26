@@ -8,6 +8,9 @@ import {
 import StartLine from 'components/startLine/StartLine';
 import PilotList from 'components/pilots/PilotList';
 import AircraftList from 'components/aircraft/AircraftList';
+import Preferences from 'components/pilots/Preferences';
+import Settings from 'components/settings/Settings';
+import Logbook from 'components/pilots/Logbook';
 import 'styles/reset.scss';
 import 'styles/general.scss';
 
@@ -23,6 +26,15 @@ export default () => (
         </Route>
         <Route path="/pilots">
           <PilotList />
+        </Route>
+        <Route path="/settings">
+          <Settings />
+        </Route>
+        <Route path="/pilot-preferences">
+          <Preferences />
+        </Route>
+        <Route path="/logbook">
+          <Logbook />
         </Route>
       </Switch>
 
