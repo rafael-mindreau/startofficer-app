@@ -242,6 +242,13 @@ export default () => {
     setAssignments(updatedAssignments);
   }, [assignments, getFlightsForPilot, pilots, preferences, selectedAircraft, setAssignments]);
 
+  const resetButtonPressed = useCallback(() => {
+    const flyingTailNumbers = Object.keys(flyingGliders);
+    const updatedAssignments = Object.fromEntries(Object.entries(assignments).filter(([tailNumber, pilot]) => flyingTailNumbers.indexOf(tailNumber) !== -1));
+
+    setAssignments({...updatedAssignments});
+  }, [assignments, flyingGliders, setAssignments]);
+
   return (
     <>
       <div className="container no-padding startline-container">
@@ -313,7 +320,7 @@ export default () => {
         </div>
 
         <div className="right">
-          <button onClick={() => setAssignments({})} className="button">
+          <button onClick={() => resetButtonPressed()} className="button">
             <i className="fas fa-redo"></i>
           </button>
         </div>
